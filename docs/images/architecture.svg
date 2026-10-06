@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 660" width="1000" height="660" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .title { font-size: 22px; font-weight: 700; fill: #0f172a; }
+      .layer { font-size: 13px; font-weight: 700; fill: #475569; letter-spacing: 1px; }
+      .box-title { font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .box-text { font-size: 12.5px; fill: #334155; }
+      .code { font-family: Menlo, Consolas, monospace; font-size: 12px; fill: #1e293b; }
+      .flow { stroke: #475569; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .note { font-size: 12px; fill: #475569; font-style: italic; }
+    </style>
+  </defs>
+
+  <!-- background (keeps the image readable in GitHub dark mode) -->
+  <rect x="0" y="0" width="1000" height="660" rx="16" fill="#ffffff"/>
+  <text x="500" y="38" text-anchor="middle" class="title">Music API: how a request travels through the app</text>
+
+  <!-- Client -->
+  <rect x="380" y="58" width="240" height="56" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"/>
+  <text x="500" y="82" text-anchor="middle" class="box-title">Client</text>
+  <text x="500" y="101" text-anchor="middle" class="box-text">Postman · browser · curl · front-end</text>
+
+  <path d="M500 114 L500 146" class="flow"/>
+  <text x="512" y="135" class="note">HTTP request (JSON body + "Authorization: Bearer &lt;token&gt;")</text>
+
+  <!-- Entry point -->
+  <text x="30" y="186" class="layer">ENTRY POINT</text>
+  <rect x="180" y="150" width="640" height="62" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+  <text x="500" y="174" text-anchor="middle" class="box-title">public/index.php</text>
+  <text x="500" y="196" text-anchor="middle" class="box-text">loads .env → builds the PHP-DI container (settings, dependencies) → creates the Slim app</text>
+
+  <path d="M500 212 L500 240" class="flow"/>
+
+  <!-- Middleware -->
+  <text x="30" y="280" class="layer">MIDDLEWARE</text>
+  <rect x="180" y="244" width="310" height="62" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="335" y="268" text-anchor="middle" class="box-title">SessionMiddleware</text>
+  <text x="335" y="290" text-anchor="middle" class="box-text">runs on every request</text>
+  <rect x="510" y="244" width="310" height="62" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="665" y="268" text-anchor="middle" class="box-title">JwtMiddleware</text>
+  <text x="665" y="290" text-anchor="middle" class="box-text">only on /api/* and /protected</text>
+  <path d="M820 275 L842 275" class="flow"/>
+  <text x="850" y="270" class="note">no / bad token</text>
+  <text x="850" y="286" class="note">→ 401 Unauthorized</text>
+
+  <path d="M500 306 L500 334" class="flow"/>
+
+  <!-- Routes -->
+  <text x="30" y="374" class="layer">ROUTES</text>
+  <rect x="180" y="338" width="640" height="62" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="500" y="362" text-anchor="middle" class="box-title">app/routes.php</text>
+  <text x="500" y="384" text-anchor="middle" class="box-text">matches URL + method · validates input · chooses the status code · writes JSON</text>
+
+  <path d="M500 400 L500 428" class="flow"/>
+
+  <!-- Repositories -->
+  <text x="30" y="476" class="layer">REPOSITORIES</text>
+  <rect x="180" y="432" width="640" height="80" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="500" y="456" text-anchor="middle" class="box-title">src/Repository/</text>
+  <text x="500" y="477" text-anchor="middle" class="code">BaseRepository: findAll · findById · insert · update · delete</text>
+  <text x="500" y="497" text-anchor="middle" class="code">ArtistRepository · AlbumRepository · RatingRepository</text>
+
+  <!-- Entities (side) -->
+  <path d="M820 472 L842 472" class="flow"/>
+  <rect x="846" y="432" width="134" height="80" rx="10" fill="#fce7f3" stroke="#db2777" stroke-width="1.5"/>
+  <text x="913" y="456" text-anchor="middle" class="box-title">src/Entity/</text>
+  <text x="913" y="477" text-anchor="middle" class="code">Artist · Album</text>
+  <text x="913" y="495" text-anchor="middle" class="code">Rating</text>
+  <text x="913" y="530" text-anchor="middle" class="note">SQL row ⇄ PHP object</text>
+
+  <path d="M500 512 L500 540" class="flow"/>
+  <text x="512" y="531" class="note">PDO prepared statements</text>
+
+  <!-- Database -->
+  <text x="30" y="580" class="layer">DATABASE</text>
+  <path d="M380 552 L380 600 A120 12 0 0 0 620 600 L620 552" fill="#e2e8f0" stroke="#475569" stroke-width="1.5"/>
+  <ellipse cx="500" cy="552" rx="120" ry="12" fill="#f8fafc" stroke="#475569" stroke-width="1.5"/>
+  <text x="500" y="582" text-anchor="middle" class="box-title">MySQL · database "music"</text>
+  <text x="500" y="600" text-anchor="middle" class="code">artists · albums · ratings</text>
+
+  <text x="500" y="642" text-anchor="middle" class="note">↑ The JSON response travels back up through the same layers to the client.</text>
+</svg>
